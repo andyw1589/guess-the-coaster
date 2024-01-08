@@ -142,7 +142,7 @@
             {/if}
 
             {#if (possibleGuesses.length > 0) && (!revealCurrent)}
-                <PossibleGuesses {possibleGuesses} />
+                <PossibleGuesses {possibleGuesses} on:autocomplete={e => currentGuess = e.detail.name} />
             {/if}
         </div>
     </div>
