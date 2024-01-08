@@ -118,7 +118,6 @@
             return true;
         }
 
-        currentGuess = "";
         feedback = `<p style="color: red">Try again!</p>`;
         return false;
     }
@@ -128,37 +127,42 @@
 </script>
 
 <div id="content-wrap">
-    <header><h1>Guess that Coaster!</h1></header>
+    <header class="ps-3"><h1>Guess that Coaster!</h1></header>
 
     <main>
         {#if errorMessage}
             <p style="color: red">{@html errorMessage}</p>
         {:else if coaster}
-            <div class="d-flex flex-row gap-2">
-                <div id="coaster-info" class="w-50 text-center">
+            <div id="game-container">
+                <div id="coaster-info" class="text-center">
                     <Coaster {coaster} reveal={revealCurrent} />
                 </div>
 
-                <div id="guess-field" class="w-50 d-flex flex-column">
+                <div id="guess-field" class="d-flex flex-column">
                     {#if feedback.length > 0}
                         {@html feedback}
                     {/if}
-                    <div>
+
+                    <div class="d-flex flex-row gap-2 mb-2">
                         <label for="coaster-name" hidden>Guess</label>
                         <input
                             type="text"
                             name="coaster-name"
+                            class="w-50"
                             bind:value={currentGuess}
                             placeholder="Guess here"
                             disabled={revealCurrent}
+                            autocomplete="off"
                         />
                         <button
+                            class="btn btn-primary"
                             on:click={submitGuess}
                             disabled={revealCurrent || currentGuess.length == 0}
                             >Guess</button
                         >
                         {#if !revealCurrent}
                             <button
+                                class="btn btn-danger"
                                 on:click={() => {
                                     revealCurrent = true;
                                     currentGuess = "";
@@ -166,19 +170,22 @@
                                 }}>Reveal</button
                             >
                         {:else}
-                            <button on:click={chooseNewCoaster}>New</button>
-                        {/if}
-
-                        {#if possibleGuesses.length > 0 && !revealCurrent}
-                            <PossibleGuesses
-                                {possibleGuesses}
-                                on:autocomplete={(e) => {
-                                    currentGuess = e.detail.guess;
-                                    feedback = "";
-                                }}
-                            />
+                            <button
+                                class="btn btn-primary"
+                                on:click={chooseNewCoaster}>New</button
+                            >
                         {/if}
                     </div>
+
+                    {#if possibleGuesses.length > 0 && !revealCurrent}
+                        <PossibleGuesses
+                            {possibleGuesses}
+                            on:autocomplete={(e) => {
+                                currentGuess = e.detail.guess;
+                                feedback = "";
+                            }}
+                        />
+                    {/if}
                 </div>
             </div>
         {:else if !doneGathering}
@@ -202,13 +209,48 @@
     #content-wrap {
         min-height: 100vh;
         height: auto !important;
-        height: 100vh;
-        margin: 0 auto -2rem;
+        margin-bottom: -2rem;
+    }
+
+    #game-container {
+        display: flex;
+        flex-direction: row;
+        align-content: space-evenly;
+        gap: 1rem;
+    }
+
+    #coaster-info,
+    #guess-field {
+        width: 50%;
     }
 
     #footer,
     #push {
         width: 100%;
         height: 2rem;
+    }
+
+    @media screen and (max-width: 800px) {
+        #game-container {
+            flex-direction: column;
+        }
+
+        #coaster-info,
+        #guess-field {
+            width: 100%;
+        }
+
+        #guess-field {
+            align-items: center;
+        }
+
+        #guess-field {
+            width: 100%;
+        }
+
+        #guess-field > div {
+            width: 100%;
+            justify-content: center;
+        }
     }
 </style>

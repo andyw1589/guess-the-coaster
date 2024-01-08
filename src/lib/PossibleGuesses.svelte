@@ -13,9 +13,17 @@
     }
 </script>
 
-<h3>Autocomplete:</h3>
-<ul>
+<h3>Suggestions:</h3>
+<div id="autocomplete" class="d-flex flex-column mb-5">
     {#each possibleGuesses as guess (guess.id)}
-        <li><button on:click={() => autocomplete(guess.fullName)}>{guess.fullName}</button></li>
+        <button class="btn btn-light" on:click={() => autocomplete(guess.fullName)}>{guess.fullName}</button>
     {/each}
-</ul>
+</div>
+
+<style>
+    #autocomplete {
+        width: 100%;
+        max-height: 50vh;
+        overflow-y: scroll;
+    }
+</style>
