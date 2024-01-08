@@ -3,7 +3,7 @@
     import Coaster from "$lib/Coaster.svelte";
     import PossibleGuesses from "$lib/PossibleGuesses.svelte";
 
-    const MIN_GUESS_LENGTH = 4;  // minimum guess length for autocomplete to show up
+    const MIN_GUESS_LENGTH = 4; // minimum guess length for autocomplete to show up
 
     let doneGathering: boolean = false;
     let allCoasters: App.Coaster[] = [];
@@ -11,16 +11,23 @@
     let possibleGuesses: App.Coaster[];
     let coaster: App.Coaster | null;
     let errorMessage: string;
-    let revealCurrent: boolean;  // whether to reveal the current coaster
-    let currentGuess: string = "";  // the player's current guess
-    let feedback: string = "";  // whether you got a guess right or wrong (HTML STRING)
+    let revealCurrent: boolean; // whether to reveal the current coaster
+    let currentGuess: string = ""; // the player's current guess
+    let feedback: string = ""; // whether you got a guess right or wrong (HTML STRING)
 
     // update possible guess autocomplete whenever user updates their guess in the input
     $: {
-        if ((coasters.length > 0) && (currentGuess.trim().length >= MIN_GUESS_LENGTH)) {
-            possibleGuesses = coasters.filter((coaster: App.Coaster): boolean => {
-                return coaster.fullName.toLowerCase().includes(currentGuess.trim().toLowerCase());
-            });
+        if (
+            coasters.length > 0 &&
+            currentGuess.trim().length >= MIN_GUESS_LENGTH
+        ) {
+            possibleGuesses = coasters.filter(
+                (coaster: App.Coaster): boolean => {
+                    return coaster.fullName
+                        .toLowerCase()
+                        .includes(currentGuess.trim().toLowerCase());
+                },
+            );
         } else {
             possibleGuesses = [];
         }
@@ -66,9 +73,11 @@
             }
 
             doneGathering = true;
-            
+
             // <coasters> is all coasters initially, with full name filled out
-            coasters = allCoasters.map((c: App.Coaster): App.Coaster => {return {...c, fullName: `${c.name}, ${c.park.name}`}});
+            coasters = allCoasters.map((c: App.Coaster): App.Coaster => {
+                return { ...c, fullName: `${c.name}, ${c.park.name}` };
+            });
             chooseNewCoaster();
         })();
 
@@ -118,43 +127,80 @@
     // $: errorMessage;
 </script>
 
-<h1>Guess that Coaster!</h1>
+<div id="content-wrap">
+    <header><h1>Guess that Coaster!</h1></header>
 
-{#if errorMessage}
-    <p style="color: red">{@html errorMessage}</p>
-{:else if coaster}
-    <div class="d-flex flex-column gap-2 w-50">
-        <Coaster {coaster} reveal={revealCurrent} />
+    <main>
+        {#if errorMessage}
+            <p style="color: red">{@html errorMessage}</p>
+        {:else if coaster}
+            <div class="d-flex flex-row gap-2">
+                <div id="coaster-info" class="w-50">
+                    <Coaster {coaster} reveal={revealCurrent} />
+                </div>
 
-        {#if feedback.length > 0}
-            {@html feedback}
+                <div id="guess-field" class="w-50 d-flex flex-column">
+                    {#if feedback.length > 0}
+                        {@html feedback}
+                    {/if}
+                    <div>
+                        <label for="coaster-name" hidden>Guess</label>
+                        <input
+                            type="text"
+                            name="coaster-name"
+                            bind:value={currentGuess}
+                            placeholder="Guess here"
+                            disabled={revealCurrent}
+                        />
+                        <button
+                            on:click={submitGuess}
+                            disabled={revealCurrent || currentGuess.length == 0}
+                            >Guess</button
+                        >
+                        {#if !revealCurrent}
+                            <button
+                                on:click={() => {
+                                    revealCurrent = true;
+                                    currentGuess = "";
+                                    feedback = "";
+                                }}>Reveal</button
+                            >
+                        {:else}
+                            <button on:click={chooseNewCoaster}>New</button>
+                        {/if}
+
+                        {#if possibleGuesses.length > 0 && !revealCurrent}
+                            <PossibleGuesses
+                                {possibleGuesses}
+                                on:autocomplete={(e) => {
+                                    currentGuess = e.detail.guess;
+                                    feedback = "";
+                                }}
+                            />
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        {:else if !doneGathering}
+            <p>gathering coasters...({allCoasters.length})</p>
+        {:else}
+            <p>loading...</p>
         {/if}
+    </main>
+</div>
 
-        <div>
-            <label for="coaster-name" hidden>Guess</label>
-            <input type="text" name="coaster-name" bind:value={currentGuess} placeholder="Guess here" disabled={revealCurrent}>
-            <button on:click={submitGuess} disabled={revealCurrent || (currentGuess.length == 0)}>Guess</button>
-            {#if !revealCurrent}
-                <button on:click={() => { 
-                        revealCurrent = true;
-                        currentGuess = "";
-                        feedback = "";
-                    }
-                }>Reveal</button>
-            {:else}
-                <button on:click={chooseNewCoaster}>New</button>
-            {/if}
+<!-- <footer id="footer" class="bg-light text-center">placeholder footer</footer> -->
 
-            {#if (possibleGuesses.length > 0) && (!revealCurrent)}
-                <PossibleGuesses {possibleGuesses} on:autocomplete={e => {
-                    currentGuess = e.detail.guess;
-                    feedback = "";
-                }} />
-            {/if}
-        </div>
-    </div>
-{:else if !doneGathering}
-    <p>gathering coasters...({allCoasters.length})</p>
-{:else}
-    <p>loading...</p>
-{/if}
+<style>
+    #content-wrap {
+        padding-bottom: 2rem;
+    }
+
+    /* #footer {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        height: 2rem;
+        transform: translateY(100%);
+    } */
+</style>
