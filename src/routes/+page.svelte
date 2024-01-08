@@ -135,7 +135,7 @@
             <p style="color: red">{@html errorMessage}</p>
         {:else if coaster}
             <div class="d-flex flex-row gap-2">
-                <div id="coaster-info" class="w-50">
+                <div id="coaster-info" class="w-50 text-center">
                     <Coaster {coaster} reveal={revealCurrent} />
                 </div>
 
@@ -190,17 +190,24 @@
     <div id="push"></div>
 </div>
 
-<footer id="footer" class="bg-light text-center">placeholder footer</footer>
+<footer id="footer" class="bg-light text-center text-secondary">
+    Powered by <a
+        class="text-dark"
+        href="https://github.com/fabianrguez/rcdb-api"
+        target="_blank">https://github.com/fabianrguez/rcdb-api</a
+    >
+</footer>
 
 <style>
     #content-wrap {
-        min-height:100vh;
+        min-height: 100vh;
         height: auto !important;
         height: 100vh;
         margin: 0 auto -2rem;
     }
 
-    #footer, #push {
+    #footer,
+    #push {
         width: 100%;
         height: 2rem;
     }
