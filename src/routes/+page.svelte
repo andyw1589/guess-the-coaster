@@ -92,13 +92,15 @@
         //console.log(coaster);
     }
 
-    // submit guess (check if <coaster.name> == <currentGuess>); verification works by checking name equality, not park
+    // submit guess, name AND park must match
     function submitGuess(): boolean {
         if (coaster === null) {
             return false;
         }
 
-        if (coaster.name.toLowerCase() === currentGuess.toLowerCase().trim()) {
+        let correct: string = `${coaster.name.toLowerCase()}, ${coaster.park.name.toLowerCase()}`;
+        let guess: string = currentGuess.toLowerCase().trim();
+        if (correct === guess) {
             revealCurrent = true;
             currentGuess = "";
             feedback = `<p style="color: green">Correct!</p>`;
@@ -142,7 +144,7 @@
             {/if}
 
             {#if (possibleGuesses.length > 0) && (!revealCurrent)}
-                <PossibleGuesses {possibleGuesses} on:autocomplete={e => currentGuess = e.detail.name} />
+                <PossibleGuesses {possibleGuesses} on:autocomplete={e => currentGuess = e.detail.guess} />
             {/if}
         </div>
     </div>

@@ -5,10 +5,10 @@
 
     const dispatch: EventDispatcher<any> = createEventDispatcher();
 
-    // on click, put the name into the input field using event
-    function autocomplete(name: string): void {
+    // on click, put the guess into the input field using event
+    function autocomplete(guess: string): void {
         dispatch("autocomplete", {
-            name: name
+            guess: guess
         });
     }
 </script>
@@ -16,6 +16,6 @@
 <h3>Autocomplete:</h3>
 <ul>
     {#each possibleGuesses as guess (guess.id)}
-        <li><button on:click={() => autocomplete(guess.name)}>{guess.name}, {guess.park.name}</button></li>
+        <li><button on:click={() => autocomplete(`${guess.name}, ${guess.park.name}`)}>{guess.name}, {guess.park.name}</button></li>
     {/each}
 </ul>
