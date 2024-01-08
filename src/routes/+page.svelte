@@ -187,20 +187,21 @@
             <p>loading...</p>
         {/if}
     </main>
+    <div id="push"></div>
 </div>
 
-<!-- <footer id="footer" class="bg-light text-center">placeholder footer</footer> -->
+<footer id="footer" class="bg-light text-center">placeholder footer</footer>
 
 <style>
     #content-wrap {
-        padding-bottom: 2rem;
+        min-height:100vh;
+        height: auto !important;
+        height: 100vh;
+        margin: 0 auto -2rem;
     }
 
-    /* #footer {
-        position: absolute;
-        bottom: 0;
+    #footer, #push {
         width: 100%;
         height: 2rem;
-        transform: translateY(100%);
-    } */
+    }
 </style>
