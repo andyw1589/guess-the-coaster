@@ -16,6 +16,6 @@
 <h3>Autocomplete:</h3>
 <ul>
     {#each possibleGuesses as guess (guess.id)}
-        <li><button on:click={() => autocomplete(`${guess.name}, ${guess.park.name}`)}>{guess.name}, {guess.park.name}</button></li>
+        <li><button on:click={() => autocomplete(guess.fullName)}>{guess.fullName}</button></li>
     {/each}
 </ul>

@@ -29,7 +29,8 @@ declare global {
 			design: string,
 			pictures: Picture[],
 			status: Status,
-			park: Park
+			park: Park,
+			fullName: string
 		}
 	}
 }

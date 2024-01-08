@@ -8,5 +8,5 @@
 
 <img class="w-50 rounded" src={pictureUrl} alt={coaster.name} />
 {#if reveal}
-    <h3>{coaster.name}, {coaster.park.name}</h3>
+    <h3>{coaster.fullName}</h3>
 {/if}

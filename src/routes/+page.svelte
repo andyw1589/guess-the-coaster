@@ -19,7 +19,7 @@
     $: {
         if ((coasters.length > 0) && (currentGuess.trim().length >= MIN_GUESS_LENGTH)) {
             possibleGuesses = coasters.filter((coaster: App.Coaster): boolean => {
-                return coaster.name.toLowerCase().includes(currentGuess.trim().toLowerCase());
+                return coaster.fullName.toLowerCase().includes(currentGuess.trim().toLowerCase());
             });
         } else {
             possibleGuesses = [];
@@ -66,7 +66,9 @@
             }
 
             doneGathering = true;
-            coasters = allCoasters; // coasters is all coasters initially
+            
+            // <coasters> is all coasters initially, with full name filled out
+            coasters = allCoasters.map((c: App.Coaster): App.Coaster => {return {...c, fullName: `${c.name}, ${c.park.name}`}});
             chooseNewCoaster();
         })();
 
@@ -89,7 +91,7 @@
         currentGuess = "";
         feedback = "";
         coaster = coasters[Math.floor(Math.random() * coasters.length)];
-        //console.log(coaster);
+        console.log(coaster);
     }
 
     // submit guess, name AND park must match
@@ -98,7 +100,7 @@
             return false;
         }
 
-        let correct: string = `${coaster.name.toLowerCase()}, ${coaster.park.name.toLowerCase()}`;
+        let correct: string = coaster.fullName.toLowerCase();
         let guess: string = currentGuess.toLowerCase().trim();
         if (correct === guess) {
             revealCurrent = true;
