@@ -13,6 +13,7 @@
     let errorMessage: string;
     let revealCurrent: boolean;  // whether to reveal the current coaster
     let currentGuess: string = "";  // the player's current guess
+    let feedback: string = "";  // whether you got a guess right or wrong (HTML STRING)
 
     // update possible guess autocomplete whenever user updates their guess in the input
     $: {
@@ -86,8 +87,27 @@
     function chooseNewCoaster(): void {
         revealCurrent = false;
         currentGuess = "";
+        feedback = "";
         coaster = coasters[Math.floor(Math.random() * coasters.length)];
         //console.log(coaster);
+    }
+
+    // submit guess (check if <coaster.name> == <currentGuess>); verification works by checking name equality, not park
+    function submitGuess(): boolean {
+        if (coaster === null) {
+            return false;
+        }
+
+        if (coaster.name.toLowerCase() === currentGuess.toLowerCase().trim()) {
+            revealCurrent = true;
+            currentGuess = "";
+            feedback = `<p style="color: green">Correct!</p>`;
+            return true;
+        }
+
+        currentGuess = "";
+        feedback = `<p style="color: red">Try again!</p>`;
+        return false;
     }
 
     // $: console.log(coasters);
@@ -102,27 +122,27 @@
     <div class="d-flex flex-column gap-2 w-50">
         <Coaster {coaster} reveal={revealCurrent} />
 
+        {#if feedback.length > 0}
+            {@html feedback}
+        {/if}
+
         <div>
             <label for="coaster-name" hidden>Guess</label>
             <input type="text" name="coaster-name" bind:value={currentGuess} placeholder="Guess here" disabled={revealCurrent}>
-            <button>Guess</button>
+            <button on:click={submitGuess} disabled={revealCurrent || (currentGuess.length == 0)}>Guess</button>
             {#if !revealCurrent}
                 <button on:click={() => { 
                         revealCurrent = true;
                         currentGuess = "";
+                        feedback = "";
                     }
                 }>Reveal</button>
             {:else}
                 <button on:click={chooseNewCoaster}>New</button>
             {/if}
 
-            {#if possibleGuesses.length > 0}
-                <h3>Autocomplete:</h3>
-                <ul>
-                    {#each possibleGuesses as guess (guess.id)}
-                        <li>{guess.name}, {guess.park.name}</li>
-                    {/each}
-                </ul>
+            {#if (possibleGuesses.length > 0) && (!revealCurrent)}
+                <PossibleGuesses {possibleGuesses} />
             {/if}
         </div>
     </div>
