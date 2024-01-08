@@ -6,7 +6,7 @@
     $: pictureUrl = coaster.pictures[Math.floor(Math.random() * coaster.pictures.length)].url;
 </script>
 
-<img class="w-50 rounded" src={pictureUrl} alt={coaster.name} />
+<img class="img-fluid rounded" src={pictureUrl} alt="A coaster that you need to guess." />
 {#if reveal}
     <h3>{coaster.fullName}</h3>
 {/if}
