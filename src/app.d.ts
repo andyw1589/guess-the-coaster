@@ -20,6 +20,11 @@ declare global {
 			state: string
 		}
 
+		interface Stats {
+			height: string | string[],
+			ΔElevation: string
+		}
+
 		interface Coaster {
 			id: number,
 			name: string,
@@ -30,12 +35,15 @@ declare global {
 			pictures: Picture[],
 			status: Status,
 			park: Park,
-			fullName: string
+			fullName: string,
+			stats: Stats
 		}
 
 		interface FilterConfig {
 			includeMountainCoasters: boolean,
-			allowedType: "Wood" | "Steel" | "Both"
+			allowedType: "Wood" | "Steel" | "Both",
+			operatingOnly: boolean,
+			minHeight: number
 		}
 	}
 }
