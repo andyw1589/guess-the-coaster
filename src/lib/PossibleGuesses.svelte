@@ -13,7 +13,7 @@
     }
 </script>
 
-<h3>Suggestions:</h3>
+<h3>Suggestions</h3>
 <div id="autocomplete" class="d-flex flex-column mb-5">
     {#each possibleGuesses as guess (guess.id)}
         <button class="btn btn-light" on:click={() => autocomplete(guess.fullName)}>{guess.fullName}</button>

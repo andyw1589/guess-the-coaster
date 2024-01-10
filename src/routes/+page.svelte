@@ -2,8 +2,13 @@
     import { onMount } from "svelte";
     import Coaster from "$lib/Coaster.svelte";
     import PossibleGuesses from "$lib/PossibleGuesses.svelte";
+    import Filters from "$lib/Filters.svelte";
 
-    const MIN_GUESS_LENGTH = 4; // minimum guess length for autocomplete to show up
+    const MIN_GUESS_LENGTH: number = 4; // minimum guess length for autocomplete to show up
+    const DEFAULT_FILTER: App.FilterConfig = {
+        includeMountainCoasters: false,
+        allowedType: "Both"
+    };
 
     let doneGathering: boolean = false;
     let allCoasters: App.Coaster[] = [];
@@ -74,10 +79,11 @@
 
             doneGathering = true;
 
-            // <coasters> is all coasters initially, with full name filled out
-            coasters = allCoasters.map((c: App.Coaster): App.Coaster => {
+            // add fullName property to all coasters
+            allCoasters = allCoasters.map((c: App.Coaster): App.Coaster => {
                 return { ...c, fullName: `${c.name}, ${c.park.name}` };
             });
+            updateCoasterList(DEFAULT_FILTER);
             chooseNewCoaster();
         })();
 
@@ -85,13 +91,22 @@
     });
 
     // assign to <coasters> the updated, filtered list of coasters
-    function updateCoasterList(): void {
-        coaster = null;
+    function updateCoasterList(filter: App.FilterConfig): void {
         coasters = allCoasters.filter((coaster: App.Coaster): boolean => {
             // TODO: filter based on country, type, status, mountain coaster or not
+            // Include/exclude mountain coasters
+            if (!filter.includeMountainCoasters && ((coaster.model === "Alpine Coaster") || (coaster.name.includes("Mountain Coaster")))) {
+                return false;
+            }
+
+            // Filter by wood or steel, only if filter is non-empty
+            if ((filter.allowedType !== "Both") && (filter.allowedType !== coaster.type)) {
+                return false;
+            }
+
             return true;
         });
-        chooseNewCoaster();
+        feedback = `<p style="color: green">Filter applied!</p>`;
     }
 
     // choose a new coaster
@@ -143,6 +158,8 @@
                         {@html feedback}
                     {/if}
 
+                    <Filters on:applyFilter={e => updateCoasterList(e.detail)}/>
+
                     <div class="d-flex flex-row gap-2 mb-2">
                         <label for="coaster-name" hidden>Guess</label>
                         <input
@@ -191,14 +208,14 @@
         {:else if !doneGathering}
             <p>gathering coasters...({allCoasters.length})</p>
         {:else}
-            <p>loading...</p>
+            <p>No coaster found :c</p>
         {/if}
     </main>
     <div id="push"></div>
 </div>
 
 <footer id="footer" class="bg-light text-center text-secondary">
-    Powered by <a
+    Powered by&nbsp;<a
         class="text-dark"
         href="https://github.com/fabianrguez/rcdb-api"
         target="_blank">https://github.com/fabianrguez/rcdb-api</a
@@ -209,7 +226,7 @@
     #content-wrap {
         min-height: 100vh;
         height: auto !important;
-        margin-bottom: -2rem;
+        margin-bottom: -2.5rem;
     }
 
     #game-container {
@@ -227,7 +244,10 @@
     #footer,
     #push {
         width: 100%;
-        height: 2rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     @media screen and (max-width: 800px) {

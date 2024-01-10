@@ -32,6 +32,11 @@ declare global {
 			park: Park,
 			fullName: string
 		}
+
+		interface FilterConfig {
+			includeMountainCoasters: boolean,
+			allowedType: "Wood" | "Steel" | "Both"
+		}
 	}
 }
 
