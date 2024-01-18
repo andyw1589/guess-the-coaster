@@ -9,12 +9,14 @@
     let allowedType: "Both" | "Wood" | "Steel" = "Both";
     let operatingOnly: boolean = true;
     let minHeight: number = 100;
+    let canadaUSOnly: boolean = true;
 
     $: filter = {
         includeMountainCoasters: includeMountainCoasters,
         allowedType: allowedType,
         operatingOnly: operatingOnly,
-        minHeight: minHeight
+        minHeight: minHeight,
+        canadaUSOnly: canadaUSOnly
     };
 
     function applyFilter() {
@@ -38,6 +40,11 @@
     <label for="min-height">
         Minimum height (feet):
         <input type="number" name="min-height" bind:value={minHeight}>
+    </label>
+
+    <label for="canada-us-only">
+        Canada/US only:
+        <input type="checkbox" name="canada-us-only" bind:checked={canadaUSOnly}>
     </label>
 
     <div id="type-filters">

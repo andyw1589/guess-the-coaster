@@ -43,7 +43,8 @@ declare global {
 			includeMountainCoasters: boolean,
 			allowedType: "Wood" | "Steel" | "Both",
 			operatingOnly: boolean,
-			minHeight: number
+			minHeight: number,
+			canadaUSOnly: boolean
 		}
 	}
 }

@@ -8,7 +8,7 @@
 
 <img id="coaster-picture" class="center-block rounded" src={pictureUrl} alt="A coaster that you need to guess." />
 {#if reveal}
-    <h3>{coaster.fullName}</h3>
+    <h3 class="mt-2">{coaster.fullName}</h3>
 {/if}
 
 <style>

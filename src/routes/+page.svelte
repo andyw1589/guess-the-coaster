@@ -10,6 +10,7 @@
         allowedType: "Both",
         operatingOnly: true,
         minHeight: 100, // 0 = any height, even unknown
+        canadaUSOnly: true
     };
 
     let doneGathering: boolean = false;
@@ -60,10 +61,11 @@
                     let json = await response.json();
                     let currList: App.Coaster[] = json.data.filter(
                         (coaster: App.Coaster): boolean => {
-                            // make sure the coasters have a picture and aren't unknown
+                            // make sure the coasters have a picture, aren't unknown, have a model
                             if (
                                 coaster.pictures.length === 0 ||
-                                coaster.name.toLowerCase().includes("unknown")
+                                coaster.name.toLowerCase().startsWith("unknown") ||
+                                coaster.model === ""
                             ) {
                                 return false;
                             }
@@ -137,6 +139,11 @@
                 return false;
             }
 
+            // Filter by country, if Canada/US only is checked
+            if (filter.canadaUSOnly && coaster.country !== "United States" && coaster.country !== "Canada") {
+                return false;
+            }
+
             return true;
         });
         feedback = `<p style="color: green">Filter applied!</p>`;
@@ -183,6 +190,9 @@
             <p style="color: red">{@html errorMessage}</p>
         {:else if !doneGathering}
             <p>gathering coasters...({allCoasters.length})</p>
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
         {:else}
             <div id="game-container">
                 <div id="coaster-info" class="text-center">
