@@ -183,7 +183,7 @@
 </script>
 
 <div id="content-wrap">
-    <header class="my-4 text-center"><h1>Guess that Coaster!</h1></header>
+    <header class="my-4 text-center"><h1>Guess the Coaster!</h1></header>
 
     <main>
         {#if errorMessage}
