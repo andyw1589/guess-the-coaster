@@ -183,14 +183,14 @@
 </script>
 
 <div id="content-wrap">
-    <header class="ps-3"><h1>Guess that Coaster!</h1></header>
+    <header class="my-4 text-center"><h1>Guess that Coaster!</h1></header>
 
     <main>
         {#if errorMessage}
-            <p style="color: red">{@html errorMessage}</p>
+            <p class="text-center" style="color: red">{@html errorMessage}</p>
         {:else if !doneGathering}
-            <p>gathering coasters...({allCoasters.length})</p>
-            <div class="spinner-border" role="status">
+            <p class="text-center">gathering coasters...({allCoasters.length})</p>
+            <div class="spinner-border mx-auto" style="display:block" role="status">
                 <span class="visually-hidden">Loading...</span>
             </div>
         {:else}

@@ -48,9 +48,9 @@
     </label>
 
     <div id="type-filters">
-        <p>Filter by type:</p>
+        <p style="margin-bottom: -0.25rem">Filter by type:</p>
         {#each ["Both", "Wood", "Steel"] as type, i}
-            <label for="type-{type}">
+            <label for="type-{type}" class="me-3">
                 <input
                     type="radio"
                     name="type-{type}"
@@ -63,5 +63,5 @@
         {/each}
     </div>
 
-    <button class="btn btn-primary w-25" on:click={applyFilter}>Apply Filters</button>
+    <button class="btn btn-primary" style="width: 150px" on:click={applyFilter}>Apply Filters</button>
 </div>
